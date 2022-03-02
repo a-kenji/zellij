@@ -328,6 +328,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "chumsky"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d02796e4586c6c41aeb68eae9bfb4558a522c35f1430c14b40136c3706e09e4"
+
+[[package]]
 name = "clap"
 version = "3.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1136,6 +1142,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "knuffel"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "45d7de890cea21a30288f01d08536f9046690030126d6b7aa23ae9dc7ee5af63"
+dependencies = [
+ "base64",
+ "chumsky",
+ "knuffel-derive",
+ "miette",
+ "thiserror",
+ "unicode-width",
+]
+
+[[package]]
+name = "knuffel-derive"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1506d1ae8a95e0d761778884779e606b3447fbe2ad54f54eac32d26d497187c1"
+dependencies = [
+ "heck 0.4.0",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "kv-log-macro"
 version = "1.0.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1300,6 +1333,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59accc507f1338036a0477ef61afdae33cde60840f4dfe481319ce3ad116ddf9"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "miette"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cd2adcfcced5d625bf90a958a82ae5b93231f57f3df1383fee28c9b5096d35ed"
+dependencies = [
+ "miette-derive",
+ "once_cell",
+ "thiserror",
+]
+
+[[package]]
+name = "miette-derive"
+version = "3.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c01a8b61312d367ce87956bb686731f87e4c6dd5dbc550e8f06e3c24fb1f67f"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -2847,6 +2902,7 @@ dependencies = [
  "anyhow",
  "dialoguer",
  "insta",
+ "knuffel",
  "log",
  "names",
  "rand 0.8.4",
@@ -2900,6 +2956,7 @@ name = "zellij-tile"
 version = "0.26.0"
 dependencies = [
  "clap",
+ "knuffel",
  "serde",
  "serde_json",
  "strum",
@@ -2928,6 +2985,7 @@ dependencies = [
  "crossbeam",
  "directories-next",
  "interprocess",
+ "knuffel",
  "lazy_static",
  "libc",
  "log",

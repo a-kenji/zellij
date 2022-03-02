@@ -5,11 +5,12 @@ use super::layout::TabLayout;
 use crate::input::options::OnForceClose;
 use serde::{Deserialize, Serialize};
 use zellij_tile::data::InputMode;
+use knuffel;
 
 use crate::position::Position;
 
 /// The four directions (left, right, up, down).
-#[derive(Eq, Clone, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Eq, Clone, Debug, PartialEq, Deserialize, Serialize, knuffel::DecodeScalar)]
 pub enum Direction {
     Left,
     Right,
@@ -17,7 +18,7 @@ pub enum Direction {
     Down,
 }
 
-#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize, knuffel::DecodeScalar)]
 pub enum ResizeDirection {
     Left,
     Right,
@@ -32,35 +33,37 @@ pub enum ResizeDirection {
 // They might need to be adjusted in the default config
 // as well `../../assets/config/default.yaml`
 /// Actions that can be bound to keys.
-#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize, knuffel::Decode)]
 pub enum Action {
     /// Quit Zellij.
     Quit,
     /// Write to the terminal.
-    Write(Vec<u8>),
+    Write(#[knuffel(argument, bytes)] Vec<u8>),
     /// Write Characters to the terminal.
-    WriteChars(String),
+    WriteChars(#[knuffel(argument)] String),
     /// Switch to the specified input mode.
-    SwitchToMode(InputMode),
+    SwitchToMode(#[knuffel(argument)] InputMode),
     /// Resize focus pane in specified direction.
-    Resize(ResizeDirection),
+    Resize(#[knuffel(argument)] ResizeDirection),
     /// Switch focus to next pane in specified direction.
     FocusNextPane,
     FocusPreviousPane,
     /// Move the focus pane in specified direction.
     SwitchFocus,
-    MoveFocus(Direction),
+    MoveFocus(#[knuffel(argument)] Direction),
     /// Tries to move the focus pane in specified direction.
     /// If there is no pane in the direction, move to previous/next Tab.
-    MoveFocusOrTab(Direction),
-    MovePane(Option<Direction>),
+    MoveFocusOrTab(#[knuffel(argument)] Direction),
+    MovePane(#[knuffel(argument)] Option<Direction>),
     /// Scroll up in focus pane.
     ScrollUp,
     /// Scroll up at point
+    #[knuffel(skip)]
     ScrollUpAt(Position),
     /// Scroll down in focus pane.
     ScrollDown,
     /// Scroll down at point
+    #[knuffel(skip)]
     ScrollDownAt(Position),
     /// Scroll down to bottom in focus pane.
     ScrollToBottom,
@@ -80,15 +83,16 @@ pub enum Action {
     ToggleActiveSyncTab,
     /// Open a new pane in the specified direction (relative to focus).
     /// If no direction is specified, will try to use the biggest available space.
-    NewPane(Option<Direction>),
+    NewPane(#[knuffel(argument)] Option<Direction>),
     /// Embed focused pane in tab if floating or float focused pane if embedded
     TogglePaneEmbedOrFloating,
     /// Toggle the visibility of all floating panes (if any) in the current Tab
     ToggleFloatingPanes,
     /// Close the focus pane.
     CloseFocus,
-    PaneNameInput(Vec<u8>),
+    PaneNameInput(#[knuffel(argument, bytes)] Vec<u8>),
     /// Create a new tab, optionally with a specified tab layout.
+    #[knuffel(skip)]
     NewTab(Option<TabLayout>),
     /// Do nothing.
     NoOp,
@@ -98,16 +102,20 @@ pub enum Action {
     GoToPreviousTab,
     /// Close the current tab.
     CloseTab,
-    GoToTab(u32),
+    GoToTab(#[knuffel(argument)] u32),
     ToggleTab,
-    TabNameInput(Vec<u8>),
+    TabNameInput(#[knuffel(argument, bytes)] Vec<u8>),
     /// Run speficied command in new pane.
     Run(RunCommandAction),
     /// Detach session and exit
     Detach,
+    #[knuffel(skip)]
     LeftClick(Position),
+    #[knuffel(skip)]
     RightClick(Position),
+    #[knuffel(skip)]
     MouseRelease(Position),
+    #[knuffel(skip)]
     MouseHold(Position),
     Copy,
     /// Confirm a prompt
@@ -115,7 +123,16 @@ pub enum Action {
     /// Deny a prompt
     Deny,
     /// Confirm an action that invokes a prompt automatically
+    // TODO: knuffel deserialization needs `[Action]` to be a `DecodeScalar`
+    // we need a way around that
+    #[knuffel(skip)]
     SkipConfirm(Box<Action>),
+}
+
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize, knuffel::Decode)]
+pub struct ActionsFromKdl {
+    #[knuffel(children)]
+    actions: Vec<Action>,
 }
 
 impl From<OnForceClose> for Action {

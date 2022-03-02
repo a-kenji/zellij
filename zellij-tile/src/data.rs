@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::str::FromStr;
 use strum_macros::{EnumDiscriminants, EnumIter, EnumString, ToString};
+use knuffel;
 
 pub type ClientId = u16; // TODO: merge with crate type?
 
@@ -83,7 +84,7 @@ pub enum Event {
 }
 
 /// Describes the different input modes, which change the way that keystrokes will be interpreted.
-#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, EnumIter, Serialize, Deserialize, ArgEnum)]
+#[derive(Debug, PartialEq, Eq, Hash, Copy, Clone, EnumIter, Serialize, Deserialize, ArgEnum, knuffel::DecodeScalar)]
 pub enum InputMode {
     /// In `Normal` mode, input is always written to the terminal, except for the shortcuts leading
     /// to other modes

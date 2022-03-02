@@ -9,6 +9,7 @@ use zellij_utils::{
     cli::{CliArgs, Command, Sessions},
     logging::*,
 };
+use knuffel;
 
 fn main() {
     configure_logger();
@@ -16,7 +17,15 @@ fn main() {
 
     if let Some(Command::Sessions(Sessions::ListSessions)) = opts.command {
         commands::list_sessions();
-    } else if let Some(Command::Sessions(Sessions::KillAllSessions { yes })) = opts.command {
+    } 
+    if let Some(Command::Sessions(Sessions::Action{ action })) = opts.command {
+        println!("{:?}", action);
+        if let Some(action) = action {
+        let parsed: zellij_utils::input::actions::ActionsFromKdl =  knuffel::parse("", &action).unwrap();
+        println!("{:?}", parsed);
+        }
+    } 
+        else if let Some(Command::Sessions(Sessions::KillAllSessions { yes })) = opts.command {
         commands::kill_all_sessions(yes);
     } else if let Some(Command::Sessions(Sessions::KillSession { ref target_session })) =
         opts.command

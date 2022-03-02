@@ -57,6 +57,9 @@ pub enum ConfigError {
     // Internal Deserialization Error
     #[error("FromUtf8Error: {0}")]
     FromUtf8(#[from] std::string::FromUtf8Error),
+    /// KDL parsing error
+    #[error("Error parsing actions")]
+    Kdl(#[from] knuffel::Error<knuffel::span::Span>),
     // Naming a part in a tab is unsupported
     #[error("There was an error in the layout file, {0}")]
     LayoutNameInTab(#[from] LayoutNameInTabError),

@@ -2,6 +2,7 @@
 use super::actions::Direction;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use knuffel;
 
 #[derive(Debug, Clone)]
 pub enum TerminalAction {
@@ -20,15 +21,19 @@ pub struct RunCommand {
 }
 
 /// Intermediate representation
-#[derive(Clone, Debug, Deserialize, Default, Serialize, PartialEq, Eq)]
+#[derive(Clone, Debug, Deserialize, Default, Serialize, PartialEq, Eq, knuffel::Decode)]
 pub struct RunCommandAction {
     #[serde(rename = "cmd")]
+    #[knuffel(argument)]
     pub command: PathBuf,
     #[serde(default)]
+    #[knuffel(arguments)]
     pub args: Vec<String>,
     #[serde(default)]
+    #[knuffel(property)]
     pub cwd: Option<PathBuf>,
     #[serde(default)]
+    #[knuffel(property)]
     pub direction: Option<Direction>,
 }
 
