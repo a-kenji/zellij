@@ -37,6 +37,7 @@ fn route_action(
             Event::InputReceived,
         ))
         .unwrap();
+    log::error!("{:?}", action);
     match action {
         Action::ToggleTab => {
             session

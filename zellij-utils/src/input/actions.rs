@@ -135,6 +135,13 @@ pub struct ActionsFromKdl {
     actions: Vec<Action>,
 }
 
+impl ActionsFromKdl {
+    /// Get a reference to the actions from kdl's actions.
+    pub fn actions(&self) -> &[Action] {
+        self.actions.as_ref()
+    }
+}
+
 impl From<OnForceClose> for Action {
     fn from(ofc: OnForceClose) -> Action {
         match ofc {
@@ -143,3 +150,5 @@ impl From<OnForceClose> for Action {
         }
     }
 }
+
+

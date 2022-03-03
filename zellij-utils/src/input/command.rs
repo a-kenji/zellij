@@ -1,8 +1,8 @@
 //! Trigger a command
 use super::actions::Direction;
+use knuffel;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use knuffel;
 
 #[derive(Debug, Clone)]
 pub enum TerminalAction {

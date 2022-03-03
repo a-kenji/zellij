@@ -21,6 +21,7 @@ use zellij_utils::{
 };
 
 pub(crate) use crate::sessions::list_sessions;
+pub(crate) use crate::sessions::send_action_to_session;
 
 pub(crate) fn kill_all_sessions(yes: bool) {
     match get_sessions() {

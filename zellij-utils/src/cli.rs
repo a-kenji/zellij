@@ -112,7 +112,5 @@ pub enum Sessions {
     },
 
     /// Send actions to a specific session
-    Action {
-        action: Option<String>,
-    }
+    Action { action: Option<String> },
 }
