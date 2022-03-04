@@ -1,3 +1,4 @@
+cargo-features = ["edition2021"]
 [package]
 name = "strider"
 version = "0.2.0"

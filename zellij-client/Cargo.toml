@@ -1,3 +1,4 @@
+cargo-features = ["edition2021"]
 [package]
 name = "zellij-client"
 version = "0.26.0"
