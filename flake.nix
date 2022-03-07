@@ -10,8 +10,11 @@
     rust-overlay.inputs.flake-utils.follows = "flake-utils";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
-    crate2nix.url = "github:kolloch/crate2nix";
-    crate2nix.flake = false;
+    #crate2nix.url = "github:kolloch/crate2nix";
+    #crate2nix.flake = false;
+    nixCargoIntegration.url = "github:yusdacra/nix-cargo-integration";
+    nixCargoIntegration.inputs.nixpkgs.follows = "nixpkgs";
+    nixCargoIntegration.inputs.rustOverlay.follows = "rust-overlay";
   };
 
     outputs = { ... } @ args: import ./nix args;

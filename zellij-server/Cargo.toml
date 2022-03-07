@@ -31,4 +31,3 @@ sysinfo = "0.22.5"
 
 [dev-dependencies]
 insta = "1.6.0"
-

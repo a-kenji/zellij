@@ -65,3 +65,9 @@ pkg-fmt = "tgz"
 
 [features]
 disable_automatic_asset_installation = []
+
+
+# nix-cargo-integration
+[package.metadata.nix]
+build = true
+app = true
