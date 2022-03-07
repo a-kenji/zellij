@@ -17,3 +17,6 @@ terminfo = "0.7.3"
 
 [dev-dependencies]
 insta = "1.6.0"
+
+[package.metadata.nix]
+library = true

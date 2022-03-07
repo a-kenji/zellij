@@ -9,7 +9,7 @@
 
 nixCargoIntegration.lib.makeOutputs {
     root = ../.;
-    defaultOutputs = { app = "zellij"; package = "zellij"; };
+    #defaultOutputs = { app = "zellij"; package = "zellij"; };
     }
 
 #}

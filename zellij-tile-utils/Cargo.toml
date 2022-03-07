@@ -10,3 +10,6 @@ license = "MIT"
 
 [dependencies]
 ansi_term = "0.12.1"
+
+[package.metadata.nix]
+library = true

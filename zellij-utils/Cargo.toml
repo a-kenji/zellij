@@ -44,3 +44,6 @@ features = ["unstable"]
 
 [dev-dependencies]
 tempfile = "3.2.0"
+
+[package.metadata.nix]
+library = true
