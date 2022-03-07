@@ -9,7 +9,7 @@
 
 nixCargoIntegration.lib.makeOutputs {
     root = ../.;
-    buildPlatform = "crane";
+    #buildPlatform = "crate2nix";
     defaultOutputs = { app = "zellij"; package = "zellij"; };
      #overrides = {
         #crateOverrides = common: prev:
