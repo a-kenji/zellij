@@ -15,6 +15,7 @@
     nixCargoIntegration.url = "github:yusdacra/nix-cargo-integration";
     nixCargoIntegration.inputs.nixpkgs.follows = "nixpkgs";
     nixCargoIntegration.inputs.rustOverlay.follows = "rust-overlay";
+    dream2nix.url = "github:nix-community/dream2nix";
   };
 
     outputs = { ... } @ args: import ./nix args;

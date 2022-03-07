@@ -4,6 +4,8 @@
 , flake-utils
 , flake-compat
 , crate2nix
+, dream2nix
+, nixCargoIntegration
 }:
 flake-utils.lib.eachSystem [
   "aarch64-linux"
@@ -102,9 +104,11 @@ flake-utils.lib.eachSystem [
     rec {
 
       # crate2nix - better incremental builds, but uses ifd
-      packages.zellij = pkgs.callPackage ./crate2nix.nix {
-        inherit crate2nix name src desktopItems postInstall meta;
-      };
+      #packages.zellij = pkgs.callPackage ./crate2nix.nix {
+        #inherit crate2nix name src desktopItems postInstall meta;
+      #};
+      # dream2nix
+      packages.zellij = dream.justBuild;
 
       # native nixpkgs support - keep supported
       packages.zellij-native =
@@ -116,7 +120,7 @@ flake-utils.lib.eachSystem [
 
       defaultPackage = packages.zellij;
 
-      # nix run
+      ## nix run
       apps.zellij = flake-utils.lib.mkApp { drv = packages.zellij; };
       defaultApp = apps.zellij;
 
@@ -127,3 +131,13 @@ flake-utils.lib.eachSystem [
       };
 
     })
+    //
+    #(
+        #let
+      #dream = dream2nix.lib.init {
+        ##use flake-utils to generate several
+        #systems = [ "x86_64-linux" ];
+        #config.projectRoot = ../. ;
+      #};
+        #in
+    #dream.makeFlakeOutputs { source = ../.; })

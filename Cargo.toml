@@ -65,3 +65,7 @@ pkg-fmt = "tgz"
 
 [features]
 disable_automatic_asset_installation = []
+
+[package.metadata.nix]
+build = true
+app = true
