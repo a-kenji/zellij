@@ -150,8 +150,10 @@ pub(crate) fn send_action_to_session(name: &str, actions: Option<String>) {
     let path = &*ZELLIJ_SOCK_DIR.join(&name);
 
     if let Some(action) = actions {
+        //let parsed: zellij_utils::input::actions::ActionsFromKdl =
+            //knuffel::parse("cli-input", &action).unwrap();
         let parsed: zellij_utils::input::actions::ActionsFromKdl =
-            knuffel::parse("cli-input", &action).unwrap();
+            zellij_utils::serde_yaml::from_str(&action).unwrap();
         println!("{:?}", parsed);
 
         let action = parsed.actions().first().unwrap().clone();
