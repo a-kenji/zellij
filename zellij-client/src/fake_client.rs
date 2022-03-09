@@ -1,14 +1,14 @@
 use log::info;
-use zellij_utils::errors::ContextType;
 use std::io::Write;
 use std::path::PathBuf;
-use std::{thread, fs};
+use std::{fs, thread};
+use zellij_utils::errors::ContextType;
 
-use crate::{ClientInfo, ClientInstruction, InputInstruction};
 use crate::{
     command_is_executing::CommandIsExecuting, input_handler::input_loop,
     os_input_output::ClientOsApi, stdin_handler::stdin_loop,
 };
+use crate::{ClientInfo, ClientInstruction, InputInstruction};
 use zellij_utils::{
     channels::{self, ChannelWithContext, SenderWithContext},
     consts::ZELLIJ_IPC_PIPE,
@@ -18,13 +18,13 @@ use zellij_utils::{
 use zellij_utils::{cli::CliArgs, input::layout::LayoutFromYaml};
 
 pub fn start_fake_client(
-    mut os_input: Box<dyn ClientOsApi>,
+    os_input: Box<dyn ClientOsApi>,
     opts: CliArgs,
     config: Config,
     config_options: Options,
     info: ClientInfo,
     layout: Option<LayoutFromYaml>,
-    actions: Option<String>,
+    actions: Vec<Action>,
 ) {
     info!("Starting fake Zellij client!");
     //let clear_client_terminal_attributes = "\u{1b}[?1l\u{1b}=\u{1b}[r\u{1b}12l\u{1b}[?1000l\u{1b}[?1002l\u{1b}[?1003l\u{1b}[?1005l\u{1b}[?1006l\u{1b}[?12l";
@@ -33,13 +33,13 @@ pub fn start_fake_client(
     //os_input.unset_raw_mode(0);
 
     //let _ = os_input
-        //.get_stdout_writer()
-        //.write(take_snapshot.as_bytes())
-        //.unwrap();
+    //.get_stdout_writer()
+    //.write(take_snapshot.as_bytes())
+    //.unwrap();
     //let _ = os_input
-        //.get_stdout_writer()
-        //.write(clear_client_terminal_attributes.as_bytes())
-        //.unwrap();
+    //.get_stdout_writer()
+    //.write(clear_client_terminal_attributes.as_bytes())
+    //.unwrap();
     //envs::set_zellij("0".to_string());
     //config.env.set_vars();
 
@@ -164,20 +164,20 @@ pub fn start_fake_client(
         .unwrap();
 
     //let handle_error = |backtrace: String| {
-        //os_input.unset_raw_mode(0);
-        //let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
-        //let restore_snapshot = "\u{1b}[?1049l";
-        //os_input.disable_mouse();
-        //let error = format!(
-            //"{}\n{}{}",
-            //restore_snapshot, goto_start_of_last_line, backtrace
-        //);
-        //let _ = os_input
-            //.get_stdout_writer()
-            //.write(error.as_bytes())
-            //.unwrap();
-        //let _ = os_input.get_stdout_writer().flush().unwrap();
-        //std::process::exit(1);
+    //os_input.unset_raw_mode(0);
+    //let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
+    //let restore_snapshot = "\u{1b}[?1049l";
+    //os_input.disable_mouse();
+    //let error = format!(
+    //"{}\n{}{}",
+    //restore_snapshot, goto_start_of_last_line, backtrace
+    //);
+    //let _ = os_input
+    //.get_stdout_writer()
+    //.write(error.as_bytes())
+    //.unwrap();
+    //let _ = os_input.get_stdout_writer().flush().unwrap();
+    //std::process::exit(1);
     //};
 
     //let exit_msg: String;

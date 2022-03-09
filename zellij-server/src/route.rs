@@ -405,7 +405,7 @@ pub(crate) fn route_thread_main(
 
         match instruction {
             ClientToServerMsg::Action(action) => {
-                    log::error!("client_id route_action :{:?}", client_id);
+                log::error!("client_id route_action :{:?}", client_id);
                 if let Some(rlocked_sessions) = rlocked_sessions.as_ref() {
                     if let Action::SwitchToMode(input_mode) = action {
                         os_input

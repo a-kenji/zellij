@@ -147,7 +147,7 @@ impl SessionState {
             }
         }
         if !clients.contains(&next_client_id) {
-        self.clients.insert(next_client_id, None);
+            self.clients.insert(next_client_id, None);
         }
         next_client_id
     }

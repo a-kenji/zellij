@@ -3,9 +3,9 @@
 use super::command::RunCommandAction;
 use super::layout::TabLayout;
 use crate::input::options::OnForceClose;
+use knuffel;
 use serde::{Deserialize, Serialize};
 use zellij_tile::data::InputMode;
-use knuffel;
 
 use crate::position::Position;
 
@@ -150,5 +150,3 @@ impl From<OnForceClose> for Action {
         }
     }
 }
-
-
