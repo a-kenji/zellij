@@ -21,7 +21,6 @@ use zellij_utils::{
 };
 
 pub(crate) use crate::sessions::list_sessions;
-pub(crate) use crate::sessions::send_action_to_session;
 
 pub(crate) fn kill_all_sessions(yes: bool) {
     match get_sessions() {
@@ -133,6 +132,26 @@ fn attach_with_session_index(config_options: Options, index: usize, create: bool
     }
 }
 
+/// Send a vec of `[Action]` to a currently running session.
+pub(crate) fn send_action_to_session(opts: zellij_utils::cli::CliArgs) {
+    let path = &*zellij_utils::consts::ZELLIJ_SOCK_DIR.join(&name);
+
+    if let Some(zellij_utils::cli::Command::Sessions(zellij_utils::cli::Sessions::Action{action})) = opts.command {
+        //let parsed: zellij_utils::input::actions::ActionsFromKdl =
+            //knuffel::parse("cli-input", &action).unwrap();
+        let parsed: zellij_utils::input::actions::ActionsFromKdl =
+            zellij_utils::serde_yaml::from_str(&action).unwrap();
+        println!("{:?}", parsed);
+        let os_input = get_os_input(zellij_client::os_input_output::get_client_os_input);
+
+        let action = parsed.actions().first().unwrap().clone();
+        log::error!("Starting fake Zellij client!");
+        zellij_client::fake_client::start_fake_client(os_input, opts, config, config_options, info, None, action);
+        log::error!("Quitting Now.");
+        std::process::exit(0);
+    };
+}
+
 fn attach_with_session_name(
     session_name: Option<String>,
     config_options: Options,
@@ -225,7 +244,7 @@ pub(crate) fn start_client(opts: CliArgs) {
         };
 
         if let Some(session_name) = opts.session.clone() {
-            start_client_plan(session_name.clone());
+            //start_client_plan(session_name.clone());
             start_client_impl(
                 Box::new(os_input),
                 opts,

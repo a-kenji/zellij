@@ -146,7 +146,9 @@ impl SessionState {
                 break;
             }
         }
+        if !clients.contains(&next_client_id) {
         self.clients.insert(next_client_id, None);
+        }
         next_client_id
     }
     pub fn remove_client(&mut self, client_id: ClientId) {

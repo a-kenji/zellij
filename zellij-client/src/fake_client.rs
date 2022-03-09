@@ -1,139 +1,47 @@
-pub mod os_input_output;
-
-mod command_is_executing;
-mod input_handler;
-mod stdin_handler;
-
 use log::info;
-use std::env::current_exe;
-use std::io::{self, Write};
-use std::path::Path;
-use std::process::Command;
-use std::thread;
+use zellij_utils::errors::ContextType;
+use std::io::Write;
+use std::path::PathBuf;
+use std::{thread, fs};
 
+use crate::{ClientInfo, ClientInstruction, InputInstruction};
 use crate::{
     command_is_executing::CommandIsExecuting, input_handler::input_loop,
     os_input_output::ClientOsApi, stdin_handler::stdin_loop,
 };
-use zellij_tile::data::InputMode;
 use zellij_utils::{
     channels::{self, ChannelWithContext, SenderWithContext},
     consts::ZELLIJ_IPC_PIPE,
-    envs,
-    errors::{ClientContext, ContextType, ErrorInstruction},
     input::{actions::Action, config::Config, options::Options},
     ipc::{ClientAttributes, ClientToServerMsg, ExitReason, ServerToClientMsg},
-    termion,
 };
 use zellij_utils::{cli::CliArgs, input::layout::LayoutFromYaml};
 
-/// Instructions related to the client-side application
-#[derive(Debug, Clone)]
-pub(crate) enum ClientInstruction {
-    Error(String),
-    Render(String),
-    UnblockInputThread,
-    Exit(ExitReason),
-    SwitchToMode(InputMode),
-    Connected,
-}
-
-impl From<ServerToClientMsg> for ClientInstruction {
-    fn from(instruction: ServerToClientMsg) -> Self {
-        match instruction {
-            ServerToClientMsg::Exit(e) => ClientInstruction::Exit(e),
-            ServerToClientMsg::Render(buffer) => ClientInstruction::Render(buffer),
-            ServerToClientMsg::UnblockInputThread => ClientInstruction::UnblockInputThread,
-            ServerToClientMsg::SwitchToMode(input_mode) => {
-                ClientInstruction::SwitchToMode(input_mode)
-            }
-            ServerToClientMsg::Connected => ClientInstruction::Connected,
-        }
-    }
-}
-
-impl From<&ClientInstruction> for ClientContext {
-    fn from(client_instruction: &ClientInstruction) -> Self {
-        match *client_instruction {
-            ClientInstruction::Exit(_) => ClientContext::Exit,
-            ClientInstruction::Error(_) => ClientContext::Error,
-            ClientInstruction::Render(_) => ClientContext::Render,
-            ClientInstruction::UnblockInputThread => ClientContext::UnblockInputThread,
-            ClientInstruction::SwitchToMode(_) => ClientContext::SwitchToMode,
-            ClientInstruction::Connected => ClientContext::Connected,
-        }
-    }
-}
-
-impl ErrorInstruction for ClientInstruction {
-    fn error(err: String) -> Self {
-        ClientInstruction::Error(err)
-    }
-}
-
-fn spawn_server(socket_path: &Path) -> io::Result<()> {
-    let status = Command::new(current_exe()?)
-        .arg("--server")
-        .arg(socket_path)
-        .status()?;
-    if status.success() {
-        Ok(())
-    } else {
-        let msg = "Process returned non-zero exit code";
-        let err_msg = match status.code() {
-            Some(c) => format!("{}: {}", msg, c),
-            None => msg.to_string(),
-        };
-        Err(io::Error::new(io::ErrorKind::Other, err_msg))
-    }
-}
-
-#[derive(Debug, Clone)]
-pub enum ClientInfo {
-    Attach(String, Options),
-    New(String),
-}
-
-impl ClientInfo {
-    pub fn get_session_name(&self) -> &str {
-        match self {
-            Self::Attach(ref name, _) => name,
-            Self::New(ref name) => name,
-        }
-    }
-}
-
-#[derive(Debug, Clone)]
-pub(crate) enum InputInstruction {
-    KeyEvent(termion::event::Event, Vec<u8>),
-    SwitchToMode(InputMode),
-    PastedText(Vec<u8>),
-}
-
-pub fn start_client(
+pub fn start_fake_client(
     mut os_input: Box<dyn ClientOsApi>,
     opts: CliArgs,
     config: Config,
     config_options: Options,
     info: ClientInfo,
     layout: Option<LayoutFromYaml>,
+    actions: Option<String>,
 ) {
-    info!("Starting Zellij client!");
-    let clear_client_terminal_attributes = "\u{1b}[?1l\u{1b}=\u{1b}[r\u{1b}12l\u{1b}[?1000l\u{1b}[?1002l\u{1b}[?1003l\u{1b}[?1005l\u{1b}[?1006l\u{1b}[?12l";
-    let take_snapshot = "\u{1b}[?1049h";
-    let bracketed_paste = "\u{1b}[?2004h";
-    os_input.unset_raw_mode(0);
+    info!("Starting fake Zellij client!");
+    //let clear_client_terminal_attributes = "\u{1b}[?1l\u{1b}=\u{1b}[r\u{1b}12l\u{1b}[?1000l\u{1b}[?1002l\u{1b}[?1003l\u{1b}[?1005l\u{1b}[?1006l\u{1b}[?12l";
+    //let take_snapshot = "\u{1b}[?1049h";
+    //let bracketed_paste = "\u{1b}[?2004h";
+    //os_input.unset_raw_mode(0);
 
-    let _ = os_input
-        .get_stdout_writer()
-        .write(take_snapshot.as_bytes())
-        .unwrap();
-    let _ = os_input
-        .get_stdout_writer()
-        .write(clear_client_terminal_attributes.as_bytes())
-        .unwrap();
-    envs::set_zellij("0".to_string());
-    config.env.set_vars();
+    //let _ = os_input
+        //.get_stdout_writer()
+        //.write(take_snapshot.as_bytes())
+        //.unwrap();
+    //let _ = os_input
+        //.get_stdout_writer()
+        //.write(clear_client_terminal_attributes.as_bytes())
+        //.unwrap();
+    //envs::set_zellij("0".to_string());
+    //config.env.set_vars();
 
     let palette = config.themes.clone().map_or_else(
         || os_input.load_palette(),
@@ -149,37 +57,19 @@ pub fn start_client(
         palette,
     };
 
-    let first_msg = match info {
-        ClientInfo::Attach(name, config_options) => {
-            envs::set_session_name(name);
+    let first_msg = ClientToServerMsg::AttachClient(client_attributes, config_options.clone());
 
-            ClientToServerMsg::AttachClient(client_attributes, config_options)
-        }
-        ClientInfo::New(name) => {
-            envs::set_session_name(name);
-
-            spawn_server(&*ZELLIJ_IPC_PIPE).unwrap();
-
-            ClientToServerMsg::NewClient(
-                client_attributes,
-                Box::new(opts),
-                Box::new(config_options.clone()),
-                Box::new(layout.unwrap()),
-                Some(config.plugins.clone()),
-            )
-        }
+    let zellij_ipc_pipe: PathBuf = {
+        let mut sock_dir = zellij_utils::consts::ZELLIJ_SOCK_DIR.clone();
+        fs::create_dir_all(&sock_dir).unwrap();
+        zellij_utils::shared::set_permissions(&sock_dir).unwrap();
+        sock_dir.push("t");
+        sock_dir
     };
-
-    os_input.connect_to_server(&*ZELLIJ_IPC_PIPE);
+    os_input.connect_to_server(&*zellij_ipc_pipe);
     os_input.send_to_server(first_msg);
 
     let mut command_is_executing = CommandIsExecuting::new();
-
-    os_input.set_raw_mode(0);
-    let _ = os_input
-        .get_stdout_writer()
-        .write(bracketed_paste.as_bytes())
-        .unwrap();
 
     let (send_client_instructions, receive_client_instructions): ChannelWithContext<
         ClientInstruction,
@@ -273,24 +163,24 @@ pub fn start_client(
         })
         .unwrap();
 
-    let handle_error = |backtrace: String| {
-        os_input.unset_raw_mode(0);
-        let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
-        let restore_snapshot = "\u{1b}[?1049l";
-        os_input.disable_mouse();
-        let error = format!(
-            "{}\n{}{}",
-            restore_snapshot, goto_start_of_last_line, backtrace
-        );
-        let _ = os_input
-            .get_stdout_writer()
-            .write(error.as_bytes())
-            .unwrap();
-        let _ = os_input.get_stdout_writer().flush().unwrap();
-        std::process::exit(1);
-    };
+    //let handle_error = |backtrace: String| {
+        //os_input.unset_raw_mode(0);
+        //let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
+        //let restore_snapshot = "\u{1b}[?1049l";
+        //os_input.disable_mouse();
+        //let error = format!(
+            //"{}\n{}{}",
+            //restore_snapshot, goto_start_of_last_line, backtrace
+        //);
+        //let _ = os_input
+            //.get_stdout_writer()
+            //.write(error.as_bytes())
+            //.unwrap();
+        //let _ = os_input.get_stdout_writer().flush().unwrap();
+        //std::process::exit(1);
+    //};
 
-    let exit_msg: String;
+    //let exit_msg: String;
 
     loop {
         let (client_instruction, mut err_ctx) = receive_client_instructions
@@ -303,14 +193,14 @@ pub fn start_client(
                 os_input.send_to_server(ClientToServerMsg::ClientExited);
 
                 if let ExitReason::Error(_) = reason {
-                    handle_error(reason.to_string());
+                    //handle_error(reason.to_string());
                 }
-                exit_msg = reason.to_string();
+                //exit_msg = reason.to_string();
                 break;
             }
             ClientInstruction::Error(backtrace) => {
                 let _ = os_input.send_to_server(ClientToServerMsg::Action(Action::Quit));
-                handle_error(backtrace);
+                //handle_error(backtrace);
             }
             ClientInstruction::Render(output) => {
                 let mut stdout = os_input.get_stdout_writer();
@@ -333,20 +223,10 @@ pub fn start_client(
 
     router_thread.join().unwrap();
 
-    // cleanup();
-    let reset_style = "\u{1b}[m";
-    let show_cursor = "\u{1b}[?25h";
-    let restore_snapshot = "\u{1b}[?1049l";
-    let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
-    let goodbye_message = format!(
-        "{}\n{}{}{}{}\n",
-        goto_start_of_last_line, restore_snapshot, reset_style, show_cursor, exit_msg
-    );
-
-    os_input.disable_mouse();
-    info!("{}", exit_msg);
-    os_input.unset_raw_mode(0);
-    let mut stdout = os_input.get_stdout_writer();
-    let _ = stdout.write(goodbye_message.as_bytes()).unwrap();
-    stdout.flush().unwrap();
+    //os_input.disable_mouse();
+    //info!("{}", exit_msg);
+    //os_input.unset_raw_mode(0);
+    //let mut stdout = os_input.get_stdout_writer();
+    //let _ = stdout.write(goodbye_message.as_bytes()).unwrap();
+    //stdout.flush().unwrap();
 }

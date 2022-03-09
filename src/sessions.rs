@@ -145,31 +145,7 @@ pub(crate) fn list_sessions() {
     process::exit(exit_code);
 }
 
-/// Send a vec of `[Action]` to a currently running session.
-pub(crate) fn send_action_to_session(name: &str, actions: Option<String>) {
-    let path = &*ZELLIJ_SOCK_DIR.join(&name);
 
-    if let Some(action) = actions {
-        //let parsed: zellij_utils::input::actions::ActionsFromKdl =
-            //knuffel::parse("cli-input", &action).unwrap();
-        let parsed: zellij_utils::input::actions::ActionsFromKdl =
-            zellij_utils::serde_yaml::from_str(&action).unwrap();
-        println!("{:?}", parsed);
-
-        let action = parsed.actions().first().unwrap().clone();
-
-        match LocalSocketStream::connect(path) {
-            Ok(stream) => {
-                let _  = IpcSenderWithContext::new(stream).send(ClientToServerMsg::Action(action));
-                process::exit(0);
-            }
-            Err(e) => {
-                eprintln!("Error occurred: {:?}", e);
-                process::exit(1);
-            }
-        };
-    };
-}
 
 pub(crate) fn session_exists(name: &str) -> Result<bool, io::ErrorKind> {
     return match get_sessions() {

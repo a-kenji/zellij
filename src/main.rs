@@ -19,8 +19,9 @@ fn main() {
     }
     if let Some(Command::Sessions(Sessions::Action { action })) = opts.command {
         println!("{:?}", action);
-        commands::send_action_to_session(&opts.session.unwrap(), action);
-    } else if let Some(Command::Sessions(Sessions::KillAllSessions { yes })) = opts.command {
+        commands::send_action_to_session(opts);
+    }
+else if let Some(Command::Sessions(Sessions::KillAllSessions { yes })) = opts.command {
         commands::kill_all_sessions(yes);
     } else if let Some(Command::Sessions(Sessions::KillSession { ref target_session })) =
         opts.command
