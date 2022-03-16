@@ -2,7 +2,7 @@ use crate::{
     cli::{CliArgs, Command},
     consts::{
         FEATURES, SYSTEM_DEFAULT_CONFIG_DIR, SYSTEM_DEFAULT_DATA_DIR_PREFIX, VERSION,
-        ZELLIJ_PROJ_DIR,
+        ZELLIJ_PROJ_DIR, ZELLIJ_VERSION, ZELLIJ_DEVELOPMENT_VERSION,
     },
     input::{
         config::{Config, ConfigError},
@@ -310,6 +310,7 @@ impl Setup {
         let mut message = String::new();
 
         writeln!(&mut message, "[Version]: {:?}", VERSION).unwrap();
+        writeln!(&mut message, "[Git Version]: {:?}", ZELLIJ_DEVELOPMENT_VERSION).unwrap();
         if let Some(config_dir) = config_dir {
             writeln!(&mut message, "[CONFIG DIR]: {:?}", config_dir).unwrap();
         } else {

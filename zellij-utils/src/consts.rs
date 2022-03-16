@@ -53,7 +53,14 @@ lazy_static! {
     pub static ref ZELLIJ_TMP_DIR: PathBuf = PathBuf::from(format!("/tmp/zellij-{}", *UID));
     pub static ref ZELLIJ_TMP_LOG_DIR: PathBuf = ZELLIJ_TMP_DIR.join("zellij-log");
     pub static ref ZELLIJ_TMP_LOG_FILE: PathBuf = ZELLIJ_TMP_LOG_DIR.join("zellij.log");
+    #[derive(Debug)]
+    pub static ref ZELLIJ_VERSION: String = {
+    // ZELLIJ_VERSION is set by this crate's build script, "build.rs"
+    let version =  env!("ZELLIJ_VERSION");
+        version.to_string()
+    };
 }
+pub const ZELLIJ_DEVELOPMENT_VERSION: &str = env!("ZELLIJ_VERSION");
 
 pub const FEATURES: &[&str] = &[
     #[cfg(feature = "disable_automatic_asset_installation")]
