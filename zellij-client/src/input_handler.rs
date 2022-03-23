@@ -151,6 +151,16 @@ impl InputHandler {
             }
         }
     }
+    fn handle_actions(&mut self, actions: Vec<Action>) {
+        for action in actions {
+            let should_exit = self.dispatch_action(action);
+            if should_exit {
+                self.should_exit = true;
+            }
+        }
+        // is this correct? should be just for this current client
+        self.should_exit = true;
+    }
 
     /// Dispatches an [`Action`].
     ///
@@ -236,6 +246,30 @@ pub(crate) fn input_loop(
         receive_input_instructions,
     )
     .handle_input();
+}
+
+/// Entry point to the module. Instantiates an [`InputHandler`] and starts
+/// its [`InputHandler::handle_input()`] loop.
+pub(crate) fn input_actions(
+    os_input: Box<dyn ClientOsApi>,
+    config: Config,
+    options: Options,
+    command_is_executing: CommandIsExecuting,
+    send_client_instructions: SenderWithContext<ClientInstruction>,
+    default_mode: InputMode,
+    receive_input_instructions: Receiver<(InputInstruction, ErrorContext)>,
+    actions: Vec<Action>,
+) {
+    let _handler = InputHandler::new(
+        os_input,
+        command_is_executing,
+        config,
+        options,
+        send_client_instructions,
+        default_mode,
+        receive_input_instructions,
+    )
+    .handle_actions(actions);
 }
 
 #[cfg(test)]

@@ -112,6 +112,39 @@ fn find_indexed_session(
     }
 }
 
+/// Send a vec of `[Action]` to a currently running session.
+pub(crate) fn send_action_to_session(opts: zellij_utils::cli::CliArgs) {
+    let name = "t";
+    let path = &*zellij_utils::consts::ZELLIJ_SOCK_DIR.join(&name);
+
+    if let Some(zellij_utils::cli::Command::Sessions(zellij_utils::cli::Sessions::Action {
+        action,
+    })) = opts.command.clone()
+    {
+        if let Some(action) = action.clone() {
+            let parsed: zellij_utils::input::actions::ActionsFromYaml =
+                zellij_utils::serde_yaml::from_str(&action).unwrap();
+            println!("{:?}", parsed);
+            let os_input = get_os_input(zellij_client::os_input_output::get_client_os_input);
+
+            let action = parsed.actions().first().unwrap().clone();
+            log::error!("Starting fake Zellij client!");
+            zellij_client::fake_client::start_fake_client(
+                Box::new(os_input),
+                opts,
+                *Box::new(zellij_utils::input::config::Config::from_default_assets().unwrap()),
+                Options::default(),
+                ClientInfo::New(name.to_string()),
+                None,
+                vec![action],
+            );
+
+            log::error!("Quitting Now.");
+            std::process::exit(0);
+        };
+    };
+}
+
 fn attach_with_session_index(config_options: Options, index: usize, create: bool) -> ClientInfo {
     // Ignore the session_name when `--index` is provided
     match get_sessions_sorted_by_creation_date() {
