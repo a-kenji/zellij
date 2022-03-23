@@ -152,16 +152,25 @@ impl InputHandler {
         }
     }
     fn handle_actions(&mut self, actions: Vec<Action>) {
+        // TODO: handle Detach correctly
         for action in actions {
+            match action {
+                Action::Quit => {
+                    crate::sessions::kill_session(&"t");
+                    break;
+                }
+        _ => {
             let should_exit = self.dispatch_action(action);
             if should_exit {
                 break;
             }
+                }
+        }
         }
         self.dispatch_action(Action::Quit);
         // is this correct? should be just for this current client
         self.should_exit = true;
-        ////log::error!("Quitting Now. Dispatched the actions");
+        log::error!("Quitting Now. Dispatched the actions");
         ////std::process::exit(0);
         //self.dispatch_action(Action::NoOp);
         //self.exit();
