@@ -155,11 +155,15 @@ impl InputHandler {
         for action in actions {
             let should_exit = self.dispatch_action(action);
             if should_exit {
-                self.should_exit = true;
+                break;
             }
         }
         // is this correct? should be just for this current client
         self.should_exit = true;
+        //log::error!("Quitting Now. Dispatched the actions");
+        //std::process::exit(0);
+        self.dispatch_action(Action::NoOp);
+        self.exit();
     }
 
     /// Dispatches an [`Action`].
