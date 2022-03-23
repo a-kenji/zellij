@@ -158,12 +158,13 @@ impl InputHandler {
                 break;
             }
         }
+        self.dispatch_action(Action::Quit);
         // is this correct? should be just for this current client
         self.should_exit = true;
-        //log::error!("Quitting Now. Dispatched the actions");
-        //std::process::exit(0);
-        self.dispatch_action(Action::NoOp);
-        self.exit();
+        ////log::error!("Quitting Now. Dispatched the actions");
+        ////std::process::exit(0);
+        //self.dispatch_action(Action::NoOp);
+        //self.exit();
     }
 
     /// Dispatches an [`Action`].

@@ -146,22 +146,22 @@ pub fn start_fake_client(
         })
         .unwrap();
 
-    //let handle_error = |backtrace: String| {
-    //os_input.unset_raw_mode(0);
-    //let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
-    //let restore_snapshot = "\u{1b}[?1049l";
-    //os_input.disable_mouse();
-    //let error = format!(
-    //"{}\n{}{}",
-    //restore_snapshot, goto_start_of_last_line, backtrace
-    //);
-    //let _ = os_input
-    //.get_stdout_writer()
-    //.write(error.as_bytes())
-    //.unwrap();
-    //let _ = os_input.get_stdout_writer().flush().unwrap();
-    //std::process::exit(1);
-    //};
+    let handle_error = |_backtrace: String| {
+        //os_input.unset_raw_mode(0);
+        //let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
+        //let restore_snapshot = "\u{1b}[?1049l";
+        //os_input.disable_mouse();
+        //let error = format!(
+        //"{}\n{}{}",
+        //restore_snapshot, goto_start_of_last_line, backtrace
+        //);
+        //let _ = os_input
+        //.get_stdout_writer()
+        //.write(error.as_bytes())
+        //.unwrap();
+        //let _ = os_input.get_stdout_writer().flush().unwrap();
+        std::process::exit(1);
+    };
 
     //let exit_msg: String;
 
@@ -176,14 +176,14 @@ pub fn start_fake_client(
                 os_input.send_to_server(ClientToServerMsg::ClientExited);
 
                 if let ExitReason::Error(_) = reason {
-                    //handle_error(reason.to_string());
+                    handle_error(reason.to_string());
                 }
                 //exit_msg = reason.to_string();
                 break;
             }
             ClientInstruction::Error(backtrace) => {
                 let _ = os_input.send_to_server(ClientToServerMsg::Action(Action::Quit));
-                //handle_error(backtrace);
+                handle_error(backtrace);
             }
             ClientInstruction::Render(_) => {
                 // we are a fake client

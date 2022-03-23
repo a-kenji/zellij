@@ -127,7 +127,7 @@ pub(crate) fn send_action_to_session(opts: zellij_utils::cli::CliArgs) {
             println!("{:?}", parsed);
             let os_input = get_os_input(zellij_client::os_input_output::get_client_os_input);
 
-            let action = parsed.actions().first().unwrap().clone();
+            let actions = parsed.actions().to_vec();
             log::error!("Starting fake Zellij client!");
             zellij_client::fake_client::start_fake_client(
                 Box::new(os_input),
@@ -136,7 +136,7 @@ pub(crate) fn send_action_to_session(opts: zellij_utils::cli::CliArgs) {
                 Options::default(),
                 ClientInfo::New(name.to_string()),
                 None,
-                vec![action],
+                actions,
             );
 
             log::error!("Quitting Now.");
