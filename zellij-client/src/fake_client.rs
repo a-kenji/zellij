@@ -146,20 +146,22 @@ pub fn start_fake_client(
         })
         .unwrap();
 
-    let handle_error = |_backtrace: String| {
+    let handle_error = |backtrace: String| {
         //os_input.unset_raw_mode(0);
         //let goto_start_of_last_line = format!("\u{1b}[{};{}H", full_screen_ws.rows, 1);
         //let restore_snapshot = "\u{1b}[?1049l";
         //os_input.disable_mouse();
-        //let error = format!(
+        let error = format!(
+        "{}",
         //"{}\n{}{}",
-        //restore_snapshot, goto_start_of_last_line, backtrace
-        //);
-        //let _ = os_input
-        //.get_stdout_writer()
-        //.write(error.as_bytes())
-        //.unwrap();
-        //let _ = os_input.get_stdout_writer().flush().unwrap();
+        //restore_snapshot, goto_start_of_last_line,
+        backtrace
+        );
+        let _ = os_input
+        .get_stdout_writer()
+        .write(error.as_bytes())
+        .unwrap();
+        let _ = os_input.get_stdout_writer().flush().unwrap();
         std::process::exit(1);
     };
 

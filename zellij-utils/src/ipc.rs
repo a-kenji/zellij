@@ -16,7 +16,7 @@ use std::{
     os::unix::io::{AsRawFd, FromRawFd},
 };
 
-use zellij_tile::{data::InputMode, prelude::Style};
+use zellij_tile::{data::InputMode, prelude::{Style, ClientId}};
 
 type SessionId = u64;
 
@@ -57,6 +57,7 @@ pub enum ClientToServerMsg {
     DetachSession(SessionId),
     // Disconnect from the session we're connected to
     DisconnectFromSession,*/
+    DetachSession(ClientId),
     TerminalResize(Size),
     NewClient(
         ClientAttributes,

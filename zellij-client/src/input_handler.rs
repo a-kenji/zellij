@@ -159,6 +159,13 @@ impl InputHandler {
                     crate::sessions::kill_session(&"t");
                     break;
                 }
+                Action::Detach => {
+                self.os_input.send_to_server(ClientToServerMsg::DetachSession(1));
+                self.should_exit = true;
+                self.dispatch_action(Action::Quit);
+                self.exit();
+                    break;
+                }
         _ => {
             let should_exit = self.dispatch_action(action);
             if should_exit {
