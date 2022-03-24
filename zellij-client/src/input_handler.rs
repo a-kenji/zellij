@@ -160,19 +160,21 @@ impl InputHandler {
                     break;
                 }
                 Action::Detach => {
-                self.os_input.send_to_server(ClientToServerMsg::DetachSession(1));
-                self.should_exit = true;
-                self.dispatch_action(Action::Quit);
-                self.exit();
-                    break;
+                    self.should_exit = true;
+                    self.os_input
+                        .send_to_server(ClientToServerMsg::DetachSession(1));
+                    //self.os_input
+                    //.send_to_server(ClientToServerMsg::Action(Action::Quit));
+                    //std::process::exit(0);
+                    //break;
                 }
-        _ => {
-            let should_exit = self.dispatch_action(action);
-            if should_exit {
-                break;
+                _ => {
+                    let should_exit = self.dispatch_action(action);
+                    if should_exit {
+                        break;
+                    }
+                }
             }
-                }
-        }
         }
         self.dispatch_action(Action::Quit);
         // is this correct? should be just for this current client

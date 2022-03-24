@@ -114,9 +114,26 @@ fn find_indexed_session(
 
 /// Send a vec of `[Action]` to a currently running session.
 pub(crate) fn send_action_to_session(opts: zellij_utils::cli::CliArgs) {
-    let name = "t";
-    let path = &*zellij_utils::consts::ZELLIJ_SOCK_DIR.join(&name);
+    match get_active_session() {
+        ActiveSession::None => {
+            eprintln!("There is no active session!");
+            std::process::exit(1);
+        }
+        ActiveSession::One(_) | ActiveSession::Many => {
+            if let Some(session_name) = opts.session.clone() {
+                attach_with_fake_client(opts, &session_name);
+            } else if let Ok(session_name) = envs::get_session_name() {
+                attach_with_fake_client(opts, &session_name);
+            } else {
+                println!("Please specify the session name to send actions to. The following sessions are active:");
+                print_sessions(get_sessions().unwrap());
+                std::process::exit(1);
+            }
+        }
+    };
+}
 
+fn attach_with_fake_client(opts: zellij_utils::cli::CliArgs, name: &str) {
     if let Some(zellij_utils::cli::Command::Sessions(zellij_utils::cli::Sessions::Action {
         action,
     })) = opts.command.clone()
@@ -138,7 +155,6 @@ pub(crate) fn send_action_to_session(opts: zellij_utils::cli::CliArgs) {
                 None,
                 actions,
             );
-
             log::error!("Quitting Now.");
             std::process::exit(0);
         };

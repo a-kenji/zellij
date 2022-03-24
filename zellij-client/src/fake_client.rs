@@ -27,11 +27,13 @@ pub fn start_fake_client(
     _opts: CliArgs,
     config: Config,
     config_options: Options,
-    _info: ClientInfo,
+    info: ClientInfo,
     _layout: Option<LayoutFromYaml>,
     actions: Vec<Action>,
 ) {
     info!("Starting fake Zellij client!");
+
+    let session_name = info.get_session_name();
 
     let full_screen_ws = os_input.get_terminal_size_using_fd(0);
     let client_attributes = ClientAttributes {
@@ -45,7 +47,7 @@ pub fn start_fake_client(
         let mut sock_dir = zellij_utils::consts::ZELLIJ_SOCK_DIR.clone();
         fs::create_dir_all(&sock_dir).unwrap();
         zellij_utils::shared::set_permissions(&sock_dir).unwrap();
-        sock_dir.push("t");
+        sock_dir.push(session_name);
         sock_dir
     };
     os_input.connect_to_server(&*zellij_ipc_pipe);
@@ -152,15 +154,15 @@ pub fn start_fake_client(
         //let restore_snapshot = "\u{1b}[?1049l";
         //os_input.disable_mouse();
         let error = format!(
-        "{}",
-        //"{}\n{}{}",
-        //restore_snapshot, goto_start_of_last_line,
-        backtrace
+            "{}",
+            //"{}\n{}{}",
+            //restore_snapshot, goto_start_of_last_line,
+            backtrace
         );
         let _ = os_input
-        .get_stdout_writer()
-        .write(error.as_bytes())
-        .unwrap();
+            .get_stdout_writer()
+            .write(error.as_bytes())
+            .unwrap();
         let _ = os_input.get_stdout_writer().flush().unwrap();
         std::process::exit(1);
     };

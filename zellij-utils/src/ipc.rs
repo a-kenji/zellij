@@ -16,7 +16,10 @@ use std::{
     os::unix::io::{AsRawFd, FromRawFd},
 };
 
-use zellij_tile::{data::InputMode, prelude::{Style, ClientId}};
+use zellij_tile::{
+    data::InputMode,
+    prelude::{ClientId, Style},
+};
 
 type SessionId = u64;
 
