@@ -110,7 +110,8 @@ pub fn cast_termwiz_key(event: KeyEvent, raw_bytes: &[u8]) -> Key {
             if modifiers.contains(Modifiers::CTRL) {
                 Key::Ctrl(c.to_lowercase().next().unwrap_or_default())
             } else if modifiers.contains(Modifiers::ALT) {
-                Key::Alt(c.to_lowercase().next().unwrap_or_default())
+                //Key::Alt(c.to_lowercase().next().unwrap_or_default())
+                Key::Char(c)
             } else {
                 Key::Char(c)
             }
@@ -118,28 +119,32 @@ pub fn cast_termwiz_key(event: KeyEvent, raw_bytes: &[u8]) -> Key {
         KeyCode::Backspace => Key::Backspace,
         KeyCode::LeftArrow | KeyCode::ApplicationLeftArrow => {
             if modifiers.contains(Modifiers::ALT) {
-                Key::AltPlusLeftArrow
+                //Key::AltPlusLeftArrow
+                Key::Right
             } else {
                 Key::Left
             }
         }
         KeyCode::RightArrow | KeyCode::ApplicationRightArrow => {
             if modifiers.contains(Modifiers::ALT) {
-                Key::AltPlusRightArrow
+                //Key::AltPlusRightArrow
+                Key::Right
             } else {
                 Key::Right
             }
         }
         KeyCode::UpArrow | KeyCode::ApplicationUpArrow => {
             if modifiers.contains(Modifiers::ALT) {
-                Key::AltPlusUpArrow
+                //Key::AltPlusUpArrow
+                Key::Up
             } else {
                 Key::Up
             }
         }
         KeyCode::DownArrow | KeyCode::ApplicationDownArrow => {
             if modifiers.contains(Modifiers::ALT) {
-                Key::AltPlusDownArrow
+                //Key::AltPlusDownArrow
+                Key::Down
             } else {
                 Key::Down
             }

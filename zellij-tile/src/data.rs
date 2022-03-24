@@ -46,18 +46,57 @@ pub enum Key {
     Insert,
     F(u8),
     Char(char),
-    Alt(char),
+    Alt(CharOrArrow),
     Ctrl(char),
     Null,
     Esc,
     // the AltPlus<arrow> variants are temporary hacks and should be removed
     // ASAP in favor of treating Alt/Ctrl/Shift as boolean modifiers to a future KeyCombo struct or
     // similar
-    AltPlusRightArrow,
-    AltPlusLeftArrow,
-    AltPlusUpArrow,
-    AltPlusDownArrow,
+    //AltPlusRightArrow,
+    //AltPlusLeftArrow,
+    //AltPlusUpArrow,
+    //AltPlusDownArrow,
 }
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum CharOrArrow {
+    //Arrow(Arrow),
+    Char(char),
+    Direction(Direction),
+}
+
+/// The four directions (left, right, up, down).
+#[derive(Eq, Clone,Copy, Debug, PartialEq, Hash, Deserialize, Serialize)]
+pub enum Direction {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+//#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+//pub enum Arrows {
+    //Up,
+    //Down,
+    //Right,
+    //Left,
+//}
+//#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+//pub struct Arrow {
+    //alt: Arrows,
+//}
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub struct Up;
+//#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+//pub struct Down;
+//#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+//pub struct Right;
+//#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+//pub struct Left;
+
+
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 
