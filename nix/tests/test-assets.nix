@@ -13,6 +13,9 @@ in
     }: {
       virtualisation.graphics = false;
       boot.kernelModules = ["kvm-intel"];
+      environment.variables = {
+        SHELL = "/usr/bin/env bash";
+      };
     };
 
     testScript = ''
