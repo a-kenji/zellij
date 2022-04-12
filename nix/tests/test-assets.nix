@@ -24,6 +24,12 @@ in
       machine.succeed(
         "${self.outputs.packages.${system}.zellij}/bin/zellij"
         )
+      machine.succeed(
+        "${self.outputs.packages.${system}.zellij}/bin/zellij ka"
+        )
+      machine.fail(
+        "${self.outputs.packages.${system}.zellij}/bin/zellij ls"
+        )
     '';
   }
 

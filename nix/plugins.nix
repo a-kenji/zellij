@@ -23,6 +23,9 @@
     "GOVERNANCE.md"
     "LICENSE.md"
     "docker-compose.yml"
+    "nix/tests"
+    "nix/devShell.nix"
+    "nix/crate2nix.nix"
   ];
   src = pkgs.nix-gitignore.gitignoreSource ignoreSource root;
 
