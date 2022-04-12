@@ -3,6 +3,7 @@
   self,
 }: let
   system = "x86_64-linux";
+  user = "alice";
 in
   pkgs.nixosTest {
     name = "test-assets";
@@ -16,19 +17,29 @@ in
       environment.variables = {
         SHELL = "/usr/bin/env bash";
       };
+     users.users.${user} = {
+      createHome = true;
+      group = "users";
+      uid = 1000;
+      isNormalUser = true;
+    };
     };
 
     testScript = ''
+      from shlex import quote
+      def su(user, cmd):
+          return f"su - {user} -c {quote(cmd)}"
+
       start_all()
       machine.wait_for_unit("default.target")
       machine.succeed(
-        "${self.outputs.packages.${system}.zellij}/bin/zellij"
+        su(${user}, "${self.outputs.packages.${system}.zellij}/bin/zellij")
         )
       machine.succeed(
-        "${self.outputs.packages.${system}.zellij}/bin/zellij ka"
+        su(${user}, "${self.outputs.packages.${system}.zellij}/bin/zellij ls")
         )
-      machine.fail(
-        "${self.outputs.packages.${system}.zellij}/bin/zellij ls"
+      machine.succeed(
+        su(${user}, "${self.outputs.packages.${system}.zellij}/bin/zellij ka")
         )
     '';
   }
