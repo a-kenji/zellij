@@ -61,11 +61,6 @@ flake-utils.lib.eachSystem [
     # for openssl/openssl-sys
     pkgs.pkg-config
 
-    # default plugins
-    plugins.status-bar
-    plugins.tab-bar
-    plugins.strider
-
     # generates manpages
     pkgs.mandown
 
@@ -149,12 +144,17 @@ in rec {
       name
       src
       crate2nix
-      nativeBuildInputs
       desktopItems
       postInstall
       patchPhase
       meta
       ;
+      nativeBuildInputs = nativeBuildInputs ++ [
+    # default plugins
+    plugins.status-bar
+    plugins.tab-bar
+    plugins.strider
+      ];
   };
 
   # native nixpkgs support - keep supported
@@ -163,13 +163,18 @@ in rec {
       src
       name
       cargoLock
-      nativeBuildInputs
       buildInputs
       postInstall
       patchPhase
       desktopItems
       meta
       ;
+      nativeBuildInputs = nativeBuildInputs ++ [
+    # default plugins
+    plugins.status-bar
+    plugins.tab-bar
+    plugins.strider
+      ];
   };
   packages.default = packages.zellij;
 
@@ -202,6 +207,7 @@ in rec {
   };
 
   devShell = devShells.zellij;
+  nixosModules.tests = import ./tests {inherit pkgs self;};
 })
 // rec {
   overlays = {
