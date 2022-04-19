@@ -1,0 +1,80 @@
+╭ zellij on  nix-add-tests [$!?] ────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│❯ hello                                                                                                                                          │
+│The program 'hello' is not in your PATH. It is provided by several packages.                                                                     │
+│You can make it available in an ephemeral shell by typing one of the following:                                                                  │
+│  nix-shell -p hello                                                                                                                             │
+│  nix-shell -p mbedtls                                                                                                                           │
+│  nix-shell -p perkeep                                                                                                                           │
+│❯                                                                                                                                                │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+│                                                                                                                                                 │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

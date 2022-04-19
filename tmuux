@@ -1,0 +1,28 @@
+warning: Git tree '/home/kenji/git/zellij-nix/zellij' is dirty
+direnv: export +AR +AR_FOR_BUILD +AS +AS_FOR_BUILD +CC +CC_FOR_BUILD +CONFIG_SHELL +CXX +CXX_FOR_BUILD +HO
+ST_PATH +IN_NIX_SHELL +LD +LD_FOR_BUILD +NIX_BINTOOLS +NIX_BINTOOLS_FOR_BUILD +NIX_BINTOOLS_WRAPPER_TARGET
+_BUILD_x86_64_unknown_linux_gnu +NIX_BINTOOLS_WRAPPER_TARGET_HOST_x86_64_unknown_linux_gnu +NIX_BUILD_CORE
+S +NIX_BUILD_TOP +NIX_CC +NIX_CC_FOR_BUILD +NIX_CC_WRAPPER_TARGET_BUILD_x86_64_unknown_linux_gnu +NIX_CC_W
+RAPPER_TARGET_HOST_x86_64_unknown_linux_gnu +NIX_CFLAGS_COMPILE +NIX_CFLAGS_COMPILE_FOR_BUILD +NIX_ENFORCE
+_NO_NATIVE +NIX_HARDENING_ENABLE +NIX_INDENT_MAKE +NIX_LDFLAGS +NIX_LDFLAGS_FOR_BUILD +NIX_PKG_CONFIG_WRAP
+PER_TARGET_HOST_x86_64_unknown_linux_gnu +NIX_STORE +NM +NM_FOR_BUILD +OBJCOPY +OBJCOPY_FOR_BUILD +OBJDUMP
+ +OBJDUMP_FOR_BUILD +PKG_CONFIG +PKG_CONFIG_PATH +RANLIB +RANLIB_FOR_BUILD +READELF +READELF_FOR_BUILD +RU
+ST_BACKTRACE +SIZE +SIZE_FOR_BUILD +SOURCE_DATE_EPOCH +STRINGS +STRINGS_FOR_BUILD +STRIP +STRIP_FOR_BUILD
++TEMP +TEMPDIR +TMP +TMPDIR +buildInputs +buildPhase +builder +configureFlags +depsBuildBuild +depsBuildBu
+ildPropagated +depsBuildTarget +depsBuildTargetPropagated +depsHostHost +depsHostHostPropagated +depsTarge
+tTarget +depsTargetTargetPropagated +doCheck +doInstallCheck +dontAddDisableDepTrack +name +nativeBuildInp
+uts +out +outputs +patches +phases +propagatedBuildInputs +propagatedNativeBuildInputs +shell +shellHook +
+stdenv +strictDeps +system ~PATH ~XDG_DATA_DIRS
+zellij on  nix-add-tests [$!?] via ❄️ pure (zj-dev-env)
+❯ ls
+assets              docker-compose.yml  nix                  test                      zellij-server
+Cargo.lock          docs                output.txt           test-template.yaml        zellij-tile
+Cargo.toml          example             README.md            treefmt.toml              zellij-tile-utils
+CHANGELOG.md        flake.lock          result               tt                        zellij-utils
+CODE_OF_CONDUCT.md  flake.nix           rust-toolchain.toml  ttt
+CONTRIBUTING.md     GOVERNANCE.md       shell.nix            XTerm2022-04-12.14:30:52
+default.nix         LICENSE.md          src                  XTerm2022-04-12.14:34:09
+default-plugins     Makefile.toml       target               zellij-client
+zellij on  nix-add-tests [$!?] via ❄️ pure (zj-dev-env)
+❯
+

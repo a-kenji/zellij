@@ -1,0 +1,37 @@
+   13                                 retries_left -= 1;
+   12                             } else {
+   11                                 break;
+   10                             }
+    9                         }
+    8                     }
+    7                 }
+    6             }
+    5         }) Result<JoinHandle<()>, Error>
+    4         .unwrap();
+    3     (should_keep_running, thread)
+    2 }
+    1
+  216 pub fn take_snapshot(terminal_output: &mut TerminalPane) -> String {
+    1     let output_lines = terminal_output.read_buffer_as_lines(); Vec<Vec<TerminalCharacter>>
+    2     let cursor_coordinates = terminal_output.cursor_coordinates(); Option<(usize, usize)>
+    3     let mut snapshot = String::new(); String
+    4     for (line_index, line) in output_lines.iter().enumerate() { usize, &Vec<TerminalCharacter>
+    5         for (character_index, terminal_character) in line.iter().enumerate() { usize, &TerminalCharacter
+    6             if let Some((cursor_x, cursor_y)) = cursor_coordinates { usize, usize
+    7                 if line_index == cursor_y && character_index == cursor_x {
+    8                     snapshot.push('█'); (ch)
+    9                     continue;
+   10                 }
+   11             }
+   12             snapshot.push(terminal_character.character); (ch)
+   13         }
+   14         if line_index != output_lines.len() - 1 {
+   15             snapshot.push('\n'); (ch)
+   16         }
+   17     }
+   18     snapshot
+   19 }
+   20
+ NORMAL  +0 ~0 -0 ᚠ nix-add-tests!  src/tests/e2e/remote_runner.rs                         take_snapshot()  rust  utf-8[unix]  34% ㏑:216/623☰℅:44
+:lua vim.lsp.buf.definition()
+

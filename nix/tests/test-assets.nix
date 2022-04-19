@@ -7,6 +7,7 @@
 in
   pkgs.nixosTest {
     name = "test-assets";
+    enableOCR = true;
     nodes.machine = {
       config,
       pkgs,
@@ -18,29 +19,23 @@ in
         SHELL = "/usr/bin/env bash";
       };
      users.users.${user} = {
-      createHome = true;
-      group = "users";
       uid = 1000;
       isNormalUser = true;
     };
     };
 
     testScript = ''
-      from shlex import quote
-      def su(user, cmd):
-          return f"su - {user} -c {quote(cmd)}"
+    from shlex import quote
 
-      start_all()
-      machine.wait_for_unit("default.target")
-      machine.succeed(
-        su(${user}, "${self.outputs.packages.${system}.zellij}/bin/zellij")
-        )
-      machine.succeed(
-        su(${user}, "${self.outputs.packages.${system}.zellij}/bin/zellij ls")
-        )
-      machine.succeed(
-        su(${user}, "${self.outputs.packages.${system}.zellij}/bin/zellij ka")
-        )
+    def su(user, cmd):
+        return f"su - {user} -c {quote(cmd)}"
+
+
+    start_all()
+    machine.wait_for_unit("default.target")
+    machine.succeed(
+      su('${user}', "${self.outputs.packages.${system}.zellij}/bin/zellij")
+      )
     '';
   }
 
